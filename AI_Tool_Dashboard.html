@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI Tool Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#eef4ff;--bg2:#fdf1ff;--card:#fff;--text:#161d3a;--muted:#5b6485;--line:#dfe6f7;--shadow:0 6px 18px rgba(40,60,140,.12)}
+:root[data-theme=dark]{--bg:#0f1530;--bg2:#1a1038;--card:#1b2347;--text:#f2f4ff;--muted:#a9b2d9;--line:#2d386b;--shadow:0 6px 20px rgba(0,0,0,.45)}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:Poppins,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:var(--text);background:linear-gradient(160deg,var(--bg),var(--bg2)) fixed;min-height:100vh;display:flex;flex-direction:column}
+/* HERO */
+.hero{position:relative;text-align:center;color:#fff;padding:52px 20px 86px;background:linear-gradient(120deg,#5b21b6,#2563eb,#0891b2,#10b981,#5b21b6);background-size:300% 100%;animation:flow 18s linear infinite;overflow:hidden}
+@keyframes flow{to{background-position:300% 0}}
+.hero i{position:absolute;border-radius:50%;background:rgba(255,255,255,.13);animation:float 9s ease-in-out infinite}
+.hero i:nth-child(1){width:300px;height:300px;left:-90px;top:-130px}
+.hero i:nth-child(2){width:220px;height:220px;right:-50px;bottom:-110px;animation-delay:-3s}
+.hero i:nth-child(3){width:90px;height:90px;left:18%;bottom:24px;animation-delay:-6s}
+.hero i:nth-child(4){width:60px;height:60px;right:22%;top:26px;animation-delay:-2s}
+@keyframes float{50%{transform:translateY(-18px) scale(1.05)}}
+.hero h1{position:relative;margin:0;font-size:clamp(2.4rem,7.5vw,4.8rem);font-weight:900;letter-spacing:-.025em;line-height:1.05;text-shadow:0 4px 18px rgba(0,0,0,.25);animation:rise .8s cubic-bezier(.2,.8,.2,1) both}
+.hero p{position:relative;margin:12px auto 0;max-width:620px;font-size:clamp(1rem,2.4vw,1.25rem);font-weight:600;opacity:.95;animation:rise .8s .15s cubic-bezier(.2,.8,.2,1) both}
+@keyframes rise{from{opacity:0;transform:translateY(22px)}}
+/* TOOLBAR */
+.bar{position:sticky;top:10px;z-index:30;max-width:1120px;margin:-30px auto 0;padding:8px;display:flex;gap:8px;align-items:center;background:var(--card);border-radius:20px;box-shadow:0 10px 30px rgba(40,60,140,.22);width:calc(100% - 24px)}
+#q{flex:1 1 auto;min-width:0;padding:10px 16px;border-radius:30px;border:2px solid var(--line);background:var(--bg);color:var(--text);font:inherit;font-size:.95rem;outline:none;transition:border-color .2s,box-shadow .2s}
+#q:focus{border-color:#2563eb;box-shadow:0 0 0 4px rgba(37,99,235,.15)}
+.hb{border:0;border-radius:30px;padding:10px 16px;font:inherit;font-weight:700;font-size:.88rem;cursor:pointer;color:#fff;background:linear-gradient(120deg,#2563eb,#7c3aed);white-space:nowrap;transition:transform .18s,box-shadow .18s,filter .18s}
+.hb:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(37,99,235,.4);filter:brightness(1.08)}
+.hb:active{transform:scale(.95)}
+.hb.gray{background:var(--bg);color:var(--text);border:2px solid var(--line)}
+.hb.gray:hover{background:var(--line);box-shadow:none}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #f59e0b;outline-offset:2px}
+main{width:100%;max-width:1120px;margin:0 auto;padding:20px 12px 30px;flex:1}
+/* TABS */
+#tabs{display:flex;gap:7px;flex-wrap:wrap;margin:4px 0 20px;justify-content:center}
+.tab{border:2px solid var(--c);border-radius:30px;padding:6px 14px;cursor:pointer;font:inherit;font-weight:700;font-size:.82rem;background:var(--card);color:var(--c);transition:transform .18s,background .2s,color .2s}
+.tab:hover{background:var(--c);color:#fff;transform:translateY(-2px)}
+.tab.on{color:#fff;background:var(--c);box-shadow:0 4px 12px color-mix(in srgb,var(--c) 45%,transparent)}
+/* SECTIONS */
+section{margin-bottom:22px;background:var(--card);border-radius:22px;box-shadow:var(--shadow);overflow:hidden;border:1px solid var(--line)}
+.sh{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:12px 18px;color:#fff;background:linear-gradient(110deg,var(--c),var(--c2))}
+.sh .big{font-size:1.45rem;line-height:1}
+.sh h2{margin:0;font-size:clamp(1.05rem,2.8vw,1.3rem);font-weight:800}
+.cnt{background:rgba(255,255,255,.25);border-radius:20px;padding:1px 10px;font-size:.78rem;font-weight:700}
+.sh .all{margin-left:auto;border:0;color:var(--c);background:#fff;border-radius:20px;padding:5px 13px;font:inherit;font-weight:700;cursor:pointer;font-size:.78rem;transition:transform .18s,box-shadow .18s}
+.sh .all:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,.25)}
+.body{padding:14px 18px 8px;background:linear-gradient(180deg,color-mix(in srgb,var(--c) 9%,var(--card)),var(--card) 120px)}
+.sub{display:flex;align-items:center;gap:8px;margin:0 0 10px;font-weight:800;font-size:.9rem;color:var(--c)}
+.sub.rec{color:#b45309}
+:root[data-theme=dark] .sub.rec{color:#fbbf24}
+.sub small{font-weight:600;color:var(--muted);font-size:.76rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-bottom:14px}
+.grid.recg{grid-template-columns:repeat(auto-fill,minmax(190px,1fr))}
+/* CARDS */
+.card{position:relative;border-radius:13px;transition:transform .2s,box-shadow .2s}
+.card:hover{transform:translateY(-3px);box-shadow:0 8px 18px color-mix(in srgb,var(--c) 35%,transparent)}
+.card.open{box-shadow:0 0 0 3px #22c55e}
+.card.rec{box-shadow:0 0 0 2px #f59e0b,0 4px 12px rgba(245,158,11,.28)}
+.card.flash{animation:flash 1.4s ease 2}
+@keyframes flash{50%{box-shadow:0 0 0 5px #22c55e,0 0 22px #22c55e}}
+.tool{position:relative;overflow:hidden;display:flex;align-items:center;gap:9px;width:100%;min-height:42px;border:0;border-radius:13px;color:#fff;padding:8px 38px 8px 10px;cursor:pointer;text-align:left;font:inherit;font-size:.88rem;font-weight:700;
+ background:linear-gradient(120deg,var(--c),var(--c2),var(--c));background-size:220% 100%;background-position:0 0;transition:background-position .45s ease,transform .12s}
+.card:hover .tool{background-position:100% 0}
+.tool:active{transform:scale(.96)}
+.rec .tool{min-height:46px;font-size:.93rem}
+.nm{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ic{width:26px;height:26px;border-radius:8px;background:#fff;display:grid;place-items:center;flex:none;overflow:hidden;font-size:1rem;transition:transform .25s}
+.ic img{width:18px;height:18px}
+.card:hover .ic{transform:rotate(-8deg) scale(1.12)}
+.dot{position:absolute;left:30px;top:6px;width:9px;height:9px;border-radius:50%;background:#22c55e;border:2px solid #fff;display:none}
+.open .dot{display:block;animation:pulse 1.6s infinite}
+@keyframes pulse{50%{box-shadow:0 0 0 5px rgba(34,197,94,.35)}}
+.star,.del{position:absolute;right:6px;top:50%;transform:translateY(-50%);border:0;background:none;color:rgba(255,255,255,.75);font-size:1.1rem;cursor:pointer;padding:2px 5px;line-height:1;transition:transform .2s,color .2s}
+.star:hover{color:#fde047;transform:translateY(-50%) scale(1.3)}
+.star.on{color:#fde047}
+.del{right:28px;font-size:.8rem;opacity:0}
+.card:hover .del,.del:focus-visible{opacity:1}
+.del:hover{color:#fff;transform:translateY(-50%) scale(1.3)}
+.badge{position:absolute;top:-9px;right:10px;z-index:2;background:#f59e0b;color:#3b2500;font-size:.62rem;font-weight:800;padding:1px 8px;border-radius:10px;box-shadow:0 2px 6px rgba(0,0,0,.2)}
+.rip{position:absolute;border-radius:50%;background:rgba(255,255,255,.55);transform:scale(0);animation:rip .55s ease-out forwards;pointer-events:none}
+@keyframes rip{to{transform:scale(4);opacity:0}}
+.intro .card{animation:pop .5s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(var(--i,0)*22ms)}
+@keyframes pop{from{opacity:0;transform:translateY(14px) scale(.9)}}
+/* DOCK, TOAST, DIALOG, FOOTER */
+#dock{position:fixed;right:14px;bottom:14px;z-index:40;background:var(--card);border-radius:16px;box-shadow:0 8px 28px rgba(0,0,0,.3);padding:10px 14px;max-width:270px;display:none;border:2px solid #22c55e;animation:pop .3s both}
+#dock b{font-size:.84rem}
+#dock ul{list-style:none;margin:6px 0 0;padding:0;max-height:150px;overflow:auto}
+#dock li{display:flex;justify-content:space-between;align-items:center;font-size:.82rem;padding:3px 0}
+#dock li button{border:0;background:var(--line);color:var(--text);border-radius:6px;cursor:pointer;padding:2px 8px;transition:background .2s,color .2s}
+#dock li button:hover{background:#e11d48;color:#fff}
+#toast{position:fixed;left:50%;bottom:24px;z-index:60;transform:translate(-50%,30px);background:#161d3a;color:#fff;padding:10px 20px;border-radius:30px;font-weight:600;font-size:.9rem;opacity:0;pointer-events:none;transition:.35s;box-shadow:0 8px 24px rgba(0,0,0,.35);max-width:90vw;text-align:center}
+#toast.on{opacity:1;transform:translate(-50%,0)}
+dialog{border:0;border-radius:20px;padding:22px;background:var(--card);color:var(--text);box-shadow:0 10px 40px rgba(0,0,0,.4);width:min(400px,92vw);font-family:inherit}
+dialog[open]{animation:pop .3s both}
+dialog::backdrop{background:rgba(10,15,40,.55)}
+dialog label{display:block;margin:10px 0 4px;font-weight:600;font-size:.85rem}
+dialog input,dialog select{width:100%;padding:10px;border-radius:10px;border:2px solid var(--line);background:var(--bg);color:var(--text);font:inherit}
+dialog input:focus,dialog select:focus{border-color:#2563eb;outline:0}
+.empty{text-align:center;color:var(--muted);padding:40px;font-weight:600}
+footer{padding:0 12px 26px}
+.pop{max-width:1120px;margin:0 auto;display:flex;gap:12px;align-items:center;background:#fff7d6;color:#5c4300;border:1px solid #fbd34d;border-left:6px solid #f59e0b;border-radius:16px;padding:12px 16px;font-size:.84rem}
+:root[data-theme=dark] .pop{background:#3a2e08;color:#fde9a8;border-color:#7a5d0e}
+.pop .pi{font-size:1.4rem}
+.pop p{margin:0}
+.copy{margin:14px auto 0;text-align:center;color:var(--muted);font-size:.78rem}
+@media(max-width:600px){
+ .hero{padding:38px 16px 78px}
+ .bar{flex-wrap:wrap}#q{flex:1 1 100%}.bar .hb{flex:1}
+ .grid{grid-template-columns:repeat(2,1fr);gap:8px}.grid.recg{grid-template-columns:repeat(2,1fr)}
+ .body{padding:12px 12px 4px}.sh{padding:11px 14px}.sh .all{margin-left:0}
+ .tool{font-size:.82rem;padding-left:8px;gap:7px}.rec .tool{font-size:.86rem}
+ .del{opacity:1}
+}
+@media(max-width:360px){.grid,.grid.recg{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<div class="hero"><i></i><i></i><i></i><i></i>
+  <h1>AI Tool Dashboard</h1>
+  <p>Click on any button to connect the tool</p>
+</div>
+
+<div class="bar" role="search">
+  <input id="q" type="search" placeholder="🔎 Search tools or categories…" aria-label="Search tools">
+  <button class="hb" id="add" aria-label="Add a tool">➕ Add tool</button>
+  <button class="hb gray" id="theme" aria-label="Toggle light or dark mode">🌙</button>
+</div>
+
+<main>
+  <nav id="tabs" aria-label="Categories"></nav>
+  <div id="content" class="intro"></div>
+</main>
+
+<footer>
+  <div class="pop" role="note"><span class="pi">🔔</span><p><b>Allow pop-ups for this page.</b> Open tools only from the buttons above. Browsers can close only the windows this dashboard opened, so “Close all” on exit works in most, not all, browsers.</p></div>
+  <div class="copy">Tools you add are saved in this browser automatically.</div>
+</footer>
+
+<aside id="dock" aria-live="polite"><b id="dockTitle"></b><ul id="dockList"></ul></aside>
+<div id="toast" role="status"></div>
+
+<dialog id="dlg">
+  <form method="dialog" id="form">
+    <h3 style="margin-top:0">➕ Add a tool</h3>
+    <label for="fn">Name</label><input id="fn" required maxlength="40" autocomplete="off">
+    <label for="fu">URL</label><input id="fu" required placeholder="https://…" autocomplete="off">
+    <label for="fc">Category</label><select id="fc"></select>
+    <div style="display:flex;gap:10px;margin-top:16px;justify-content:flex-end">
+      <button class="hb gray" value="cancel" formnovalidate>Cancel</button>
+      <button class="hb" value="ok">Save tool</button>
+    </div>
+  </form>
+</dialog>
+
+<script>
+/* ===== EDIT HERE: categories, tools and recommendations ===== */
+const CATEGORIES = [
+  {id:"text",  name:"Text Models",          icon:"💬", c:"#7c3aed", c2:"#a855f7"},
+  {id:"image", name:"Image Models",         icon:"🎨", c:"#db2777", c2:"#fb7185"},
+  {id:"video", name:"Video Models",         icon:"🎬", c:"#ea580c", c2:"#f59e0b"},
+  {id:"audio", name:"Audio Models",         icon:"🎙️", c:"#0891b2", c2:"#22d3ee"},
+  {id:"music", name:"Music",                icon:"🎵", c:"#059669", c2:"#4ade80"},
+  {id:"all",   name:"All-In-One Platforms", icon:"🧩", c:"#2563eb", c2:"#818cf8"}
+];
+const TOOLS = [
+  ["text","ChatGPT","https://chatgpt.com/"],["text","Gemini","https://gemini.google.com/"],
+  ["text","Claude","https://claude.ai/"],["text","Grok","http://grok.com/"],
+  ["text","DeepSeek","https://chat.deepseek.com/"],["text","Kimi","https://www.kimi.com/en"],
+  ["text","Qwen","https://chat.qwen.ai/"],["text","Mistral","https://chat.mistral.ai/"],
+  ["image","Nano Banana 2","https://labs.google/fx/tools/flow"],["image","Nano Banana Pro","https://labs.google/fx/tools/flow"],
+  ["image","Midjourney V8","https://www.midjourney.com/explore?tab=video_top"],["image","GPT-Image 2.0","https://chatgpt.com/images/"],
+  ["image","Flux 2 Max","https://playground.bfl.ai/image/generate"],["image","Seedream 4","https://seed.bytedance.com/en/seedream4_0"],
+  ["image","Grok Imagine","https://grok.com/imagine"],["image","Qwen Image","https://chat.qwen.ai/?inputFeature=t2i"],
+  ["video","Google Flow AI","https://labs.google/fx/tools/flow"],["video","Omni Flash","https://labs.google/fx/tools/flow"],["video","Kling","https://kling.ai/"],
+  ["video","Veo","https://labs.google/fx/tools/flow"],["video","Runway","https://runwayml.com/"],
+  ["video","PixVerse","https://pixverse.ai/en"],["video","Grok Imagine","https://grok.com/imagine"],
+  ["video","SkyReels","https://www.skyreels.ai/"],["video","Vidu Q3","https://viduq3.com/"],
+  ["video","Hailuo","https://hailuoai.video/"],
+  ["audio","ElevenLabs","https://elevenlabs.io/app/home"],["audio","Inworld","https://inworld.ai/"],
+  ["audio","MiniMax Speech","https://www.minimax.io/audio/text-to-speech"],["audio","Sonic 3","https://cartesia.ai/sonic"],
+  ["music","Suno","https://suno.com/"],["music","Udio","https://www.udio.com/"],
+  ["music","Mureka","https://www.mureka.ai/"],["music","Soundraw","https://soundraw.io/"],
+  ["music","Lyria","https://www.flowmusic.app/invite/4SC9UI"],
+  ["all","Google Flow AI","https://labs.google/fx/tools/flow"],["all","Higgsfield","https://higgsfield.ai/"],["all","OpenArt","https://openart.ai/"],
+  ["all","Magnific","https://www.magnific.com/"],["all","Artlist","https://artlist.io/"],
+  ["all","Weavy","https://www.weavy.ai/"],["all","Adobe Firefly","https://firefly.adobe.com/"],
+  ["all","InVideo","https://invideo.io/"],["all","Syntx","https://syntx.ai/"],
+  ["all","Mammouth AI","https://mammouth.ai/"]
+].map(([cat,name,url])=>({cat,name,url}));
+const RECOMMENDED = ["text|ChatGPT","text|Claude","image|Nano Banana Pro","image|GPT-Image 2.0",
+  "video|Omni Flash","video|Kling","audio|ElevenLabs","music|Suno","all|Higgsfield","all|OpenArt"];
+/* ======================================================= */
+
+const $=s=>document.querySelector(s);
+const store={
+  get(k,d){try{return JSON.parse(localStorage.getItem(k))??d}catch(e){return d}},
+  set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){toast("Could not save: browser storage is blocked.")}}
+};
+let custom=store.get("aitd_custom",[]), favs=store.get("aitd_favs",[]), recent=store.get("aitd_recent",[]);
+let theme=store.get("aitd_theme","light"), activeTab="all-tabs", query="", flashKey=null;
+const wins={};
+const all=()=>[...TOOLS,...custom.map(t=>({...t,custom:true}))];
+const key=t=>t.cat+"|"+t.name;
+const isRec=t=>RECOMMENDED.includes(key(t));
+const esc=s=>String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));
+const catOf=id=>CATEGORIES.find(c=>c.id===id)||CATEGORIES[0];
+const host=u=>{try{return new URL(u).hostname.replace("www.","")}catch(e){return u}};
+let tt;function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("on");clearTimeout(tt);tt=setTimeout(()=>t.classList.remove("on"),2600)}
+function applyTheme(){document.documentElement.dataset.theme=theme;$("#theme").textContent=theme==="dark"?"☀️":"🌙"}
+
+let idx=0;
+function cardHTML(t){
+  const c=catOf(t.cat), k=key(t), w=wins[k], open=w&&!w.win.closed, fav=favs.includes(k), rec=isRec(t);
+  return `<div class="card${open?" open":""}${rec?" rec":""}${flashKey===k?" flash":""}" data-k="${esc(k)}" style="--c:${c.c};--c2:${c.c2};--i:${idx++}">
+    ${rec?'<span class="badge">★ Recommended</span>':""}
+    <button class="tool" data-open="${esc(k)}" title="${esc(host(t.url))}" aria-label="Open ${esc(t.name)}">
+      <span class="ic"><img src="https://www.google.com/s2/favicons?domain=${esc(host(t.url))}&sz=64" alt="" onerror="this.replaceWith(document.createTextNode('${c.icon}'))"></span>
+      <span class="nm">${esc(t.name)}</span></button>
+    <i class="dot"></i>
+    ${t.custom?`<button class="del" data-del="${esc(k)}" title="Remove this tool" aria-label="Remove ${esc(t.name)}">🗑</button>`:""}
+    <button class="star${fav?" on":""}" data-fav="${esc(k)}" aria-label="Favorite ${esc(t.name)}" aria-pressed="${fav}">${fav?"★":"☆"}</button></div>`;
+}
+function simple(title,icon,list,c){
+  if(!list.length) return "";
+  return `<section style="--c:${c};--c2:${c}"><div class="sh"><span class="big">${icon}</span><h2>${title}</h2><span class="cnt">${list.length}</span></div>
+  <div class="body"><div class="grid">${list.map(cardHTML).join("")}</div></div></section>`;
+}
+function category(c,list){
+  if(!list.length) return "";
+  const rec=list.filter(isRec), more=list.filter(t=>!isRec(t));
+  return `<section style="--c:${c.c};--c2:${c.c2}"><div class="sh"><span class="big">${c.icon}</span><h2>${c.name}</h2><span class="cnt">${list.length}</span>
+    <button class="all" data-all="${c.id}">Open all</button></div>
+  <div class="body">
+  ${rec.length?`<div class="sub rec">⭐ Recommended Tools</div><div class="grid recg">${rec.map(cardHTML).join("")}</div>`:""}
+  ${more.length?`<div class="sub">${rec.length?"More tools":"All tools"} <small>${more.length}</small></div><div class="grid">${more.map(cardHTML).join("")}</div>`:""}
+  </div></section>`;
+}
+function render(){
+  idx=0;
+  const q=query.trim().toLowerCase();
+  const match=t=>!q||(t.name+" "+catOf(t.cat).name+" "+host(t.url)).toLowerCase().includes(q);
+  $("#tabs").innerHTML=[{id:"all-tabs",name:"All",c:"#475569"},...CATEGORIES.map(c=>({id:c.id,name:c.icon+" "+c.name,c:c.c}))]
+    .map(t=>`<button class="tab${activeTab===t.id?" on":""}" style="--c:${t.c}" data-tab="${t.id}">${t.name}</button>`).join("");
+  let html="";
+  if(activeTab==="all-tabs"&&!q){
+    html+=simple("Favorites","⭐",all().filter(t=>favs.includes(key(t))),"#f59e0b");
+    html+=simple("Recently used","🕘",recent.map(k=>all().find(t=>key(t)===k)).filter(Boolean).slice(0,6),"#64748b");
+  }
+  CATEGORIES.filter(c=>activeTab==="all-tabs"||activeTab===c.id).forEach(c=>{
+    html+=category(c,all().filter(t=>t.cat===c.id&&match(t)));
+  });
+  $("#content").innerHTML=html||`<div class="empty">No tools found 🤷 Try another search or add the tool with “Add tool”.</div>`;
+  renderDock();
+}
+function renderDock(){
+  const open=Object.entries(wins).filter(([k,w])=>!w.win.closed);
+  $("#dock").style.display=open.length?"block":"none";
+  $("#dockTitle").textContent=`🟢 Open tools: ${open.length}`;
+  $("#dockList").innerHTML=open.map(([k,w])=>`<li><span>${esc(w.name)}</span><button data-close="${esc(k)}" aria-label="Close ${esc(w.name)}" title="Close tool">✖</button></li>`).join("");
+}
+function openTool(k){
+  const t=all().find(x=>key(x)===k); if(!t) return;
+  const ex=wins[k];
+  if(ex&&!ex.win.closed){ex.win.focus();return}
+  const w=window.open(t.url,"aitd_"+k.replace(/\W/g,"_"));
+  if(!w){toast("Pop-up blocked. Allow pop-ups for this page, then click again.");return}
+  wins[k]={win:w,name:t.name};
+  recent=[k,...recent.filter(x=>x!==k)].slice(0,12); store.set("aitd_recent",recent);
+  document.querySelectorAll(".card").forEach(c=>{if(c.dataset.k===k)c.classList.add("open")});
+  renderDock(); toast("Opening "+t.name+" …");
+  setTimeout(()=>{$("#content").classList.remove("intro");render()},400);
+}
+function closeTool(k){const w=wins[k];if(w){try{w.win.close()}catch(e){}delete wins[k]}render()}
+function closeAll(){Object.keys(wins).forEach(k=>{try{wins[k].win.close()}catch(e){}delete wins[k]})}
+
+/* ripple on press */
+document.addEventListener("pointerdown",e=>{
+  const b=e.target.closest(".tool"); if(!b) return;
+  const r=b.getBoundingClientRect(), s=Math.max(r.width,r.height)/4, sp=document.createElement("span");
+  sp.className="rip"; sp.style.cssText=`width:${s}px;height:${s}px;left:${e.clientX-r.left-s/2}px;top:${e.clientY-r.top-s/2}px`;
+  b.appendChild(sp); setTimeout(()=>sp.remove(),600);
+});
+document.addEventListener("click",e=>{
+  const b=e.target.closest("button"); if(!b) return;
+  $("#content").classList.remove("intro");
+  if(b.dataset.open) openTool(b.dataset.open);
+  else if(b.dataset.fav){const k=b.dataset.fav;const on=!favs.includes(k);favs=on?[...favs,k]:favs.filter(x=>x!==k);store.set("aitd_favs",favs);render();toast(on?"Added to Favorites ⭐":"Removed from Favorites")}
+  else if(b.dataset.del){
+    const k=b.dataset.del;
+    if(!confirm("Remove this tool from your dashboard?")) return;
+    custom=custom.filter(t=>key(t)!==k); favs=favs.filter(x=>x!==k); recent=recent.filter(x=>x!==k);
+    store.set("aitd_custom",custom);store.set("aitd_favs",favs);store.set("aitd_recent",recent);render();toast("Tool removed");
+  }
+  else if(b.dataset.tab){activeTab=b.dataset.tab;render()}
+  else if(b.dataset.close) closeTool(b.dataset.close);
+  else if(b.dataset.all){
+    const list=all().filter(t=>t.cat===b.dataset.all);
+    if(list.length>3&&!confirm(`Open all ${list.length} tools? Your browser may block some pop-ups.`)) return;
+    list.forEach(t=>openTool(key(t)));
+  }
+});
+$("#q").addEventListener("input",e=>{query=e.target.value;$("#content").classList.remove("intro");render()});
+$("#theme").onclick=()=>{theme=theme==="dark"?"light":"dark";store.set("aitd_theme",theme);applyTheme()};
+$("#fc").innerHTML=CATEGORIES.map(c=>`<option value="${c.id}">${c.icon} ${c.name}</option>`).join("");
+$("#add").onclick=()=>{$("#dlg").showModal();$("#fn").focus()};
+$("#form").addEventListener("submit",e=>{
+  if(e.submitter&&e.submitter.value!=="ok") return;
+  let u=$("#fu").value.trim(); if(!/^https?:\/\//i.test(u)) u="https://"+u;
+  try{new URL(u)}catch(err){e.preventDefault();toast("Please enter a valid URL.");return}
+  const t={cat:$("#fc").value,name:$("#fn").value.trim(),url:u}, k=key(t);
+  if(all().some(x=>key(x)===k)){e.preventDefault();toast("That tool already exists in this category.");return}
+  custom.push(t); store.set("aitd_custom",custom);
+  $("#form").reset(); query=""; $("#q").value=""; activeTab=t.cat; flashKey=k;
+  $("#content").classList.remove("intro"); render();
+  toast("✅ "+t.name+" added permanently");
+  setTimeout(()=>{const el=document.querySelector(`.card[data-k="${CSS.escape(k)}"]`);if(el)el.scrollIntoView({behavior:"smooth",block:"center"});flashKey=null},150);
+});
+addEventListener("pagehide",closeAll);
+setInterval(renderDock,1500);
+applyTheme(); render();
+setTimeout(()=>$("#content").classList.remove("intro"),1800);
+</script>
+</body>
+</html>
